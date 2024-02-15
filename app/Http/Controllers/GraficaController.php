@@ -3,17 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Measurement;
 
 class GraficaController extends Controller
 {
     public function grafica1()
     {
-        $title = "Gráfica 1";
+        $title = "Gráfico 1";
         $subtitle = "Subtítulo de la Gráfica 1";
-
+        $measurements = Measurement::all();
         
-        return view('graficas.grafica1', compact('title', 'subtitle'));
+
+        return view('graficas.grafica1', compact('title', 'subtitle', 'measurements'));
     }
+
+
 
     public function grafica2()
     {
