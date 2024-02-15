@@ -2,55 +2,59 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    crossorigin="anonymous" />
-  <link href="{{ asset('/css/admin.css') }}" rel="stylesheet" />
-  <title>@yield('title', 'Admin - Online Store')</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous" />
+    <link href="{{ asset('/css/admin.css') }}" rel="stylesheet" />
+    <title>@yield('title', 'Admin - Online Store')</title>
 </head>
 
 <body>
-  <div class="row g-0">
-    <!-- sidebar -->
-    <div class="p-3 col fixed text-white bg-dark">
-      <a href="{{ route('admin.home.index') }}" class="text-white text-decoration-none">
-        <span class="fs-4">Panel de control</span>
-      </a>
-      <hr />
-      <ul class="nav flex-column">
-        <li><a href="{{ route('admin.home.index') }}" class="nav-link text-white">- Página principal de la administración</a></li>
-        <li><a href="{{ route('admin.product.index') }}" class="nav-link text-white">- Administración de productos</a></li>
-        <li>
-          <a href="{{ route('home.index') }}" class="mt-2 btn bg-primary text-white">Volver a la página principal</a>
-        </li>
-      </ul>
-    </div>
-    <!-- sidebar -->
-    <div class="col content-grey">
-      <nav class="p-3 shadow text-end">
-        <span class="profile-font">Admin</span>
-        <img class="img-profile rounded-circle" src="{{ asset('/img/undraw_profile.svg') }}">
+    <div class="row g-0">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{{ route('admin.home.index') }}">Panel de control</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('grafica1') }}">Gráfica 1</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('grafica2') }}">Gráfica 2</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('grafica3') }}">Gráfica 3</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('grafica4') }}">Gráfica 4</a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </nav>
-
-      <div class="g-0 m-3">
-        @yield('content')
-      </div>
+      
+            <div class="g-0 m-3">
+                @yield('content')
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- footer -->
-  <div class="copyright py-4 text-center text-white">
-    <div class="container">
-      <small>
-        Pie de página
-      </small>
+    <!-- footer -->
+    <div class="copyright py-4 text-center text-white">
+        <div class="container">
+            <small>
+                Pie de página
+            </small>
+        </div>
     </div>
-  </div>
-  <!-- footer -->
+    <!-- footer -->
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
-  </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
+    </script>
 </body>
 
 </html>

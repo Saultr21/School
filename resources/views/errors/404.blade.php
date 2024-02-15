@@ -1,5 +1,5 @@
 <!-- resources/views/errors/404.blade.php -->
-@extends('layouts.app')
+@extends('layouts.grafica')
 @section('title', 'Error 404 - Página no encontrada')
 @section('content')
 

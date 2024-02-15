@@ -13,7 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', "App\Http\Controllers\HomeController@index")->name("home.index");
+
 
 Route::get('/admin', 'App\Http\Controllers\Admin\AdminHomeController@index')->name("admin.home.index");
 
+Route::get('/', function () {
+    return redirect()->route('admin.home.index');
+});
+
+
+use App\Http\Controllers\GraficaController;
+
+Route::get('/grafica1', [GraficaController::class, 'grafica1'])->name('grafica1');
+Route::get('/grafica2', [GraficaController::class, 'grafica2'])->name('grafica2');
+Route::get('/grafica3', [GraficaController::class, 'grafica3'])->name('grafica3');
+Route::get('/grafica4', [GraficaController::class, 'grafica4'])->name('grafica4');
