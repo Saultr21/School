@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Measurement;
 
@@ -9,23 +9,28 @@ class GraficaController extends Controller
 {
     public function grafica1()
     {
-        $title = "Gráfico 1";
+        $date = Carbon::now()->toDateString();
+        $measurements = Measurement::whereDate('fecha', $date)->get();
+
+        $title = "Consumo del día: $date";
         $subtitle = "Subtítulo de la Gráfica 1";
-        $measurements = Measurement::all();
-        
 
         return view('graficas.grafica1', compact('title', 'subtitle', 'measurements'));
     }
 
-
-
     public function grafica2()
     {
-        $title = "Gráfica 2";
+        $startOfWeek = Carbon::now()->startOfWeek()->toDateString();
+        $endOfWeek = Carbon::now()->endOfWeek()->toDateString();
+
+        $measurements = Measurement::whereDate('fecha', '>=', $startOfWeek)
+                                    ->whereDate('fecha', '<=', $endOfWeek)
+                                    ->get();
+
+        $title = "Consumo de la semana del $startOfWeek al $endOfWeek";
         $subtitle = "Subtítulo de la Gráfica 2";
 
-        
-        return view('graficas.grafica2', compact('title', 'subtitle'));
+        return view('graficas.grafica2', compact('title', 'subtitle', 'measurements'));
     }
 
     public function grafica3()

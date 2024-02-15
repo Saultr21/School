@@ -15,7 +15,7 @@
 
   <!-- Marcador donde incluiremos el título de la página. El primer parámetro (title) contiene el identificador y el segundo (Tienda online) contiene el valor por defecto que se usará en caso de que no se le asigne ningún valor al marcador-->
   <title>@yield('title', 'Tienda online')</title>   
-
+  @yield('scripts')
 </head>
 
 <body>
@@ -50,7 +50,7 @@
 
   <main>
       <div class="chart-container">
-
+@yield('content')
       </div>
   </main>
 </body>
