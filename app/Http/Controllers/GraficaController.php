@@ -9,15 +9,17 @@ use Illuminate\Support\Facades\DB;
 class GraficaController extends Controller
 {
     public function grafica1()
-    {
-        $date = Carbon::now()->toDateString();
-        $measurements = Measurement::whereDate('fecha', $date)->get();
+{
+    $date = Carbon::now()->toDateString();
+    $measurements = Measurement::select('id_sensor', 'fecha', 'consumo')
+        ->whereDate('fecha', $date)
+        ->get();
 
-        $title = "Consumo del día: $date";
-        $subtitle = "Subtítulo de la Gráfica 1";
+    $title = "Consumo del día: $date";
+    $subtitle = "Subtítulo de la Gráfica 1";
 
-        return view('graficas.grafica1', compact('title', 'subtitle', 'measurements'));
-    }
+    return view('graficas.grafica1', compact('title', 'subtitle', 'measurements'));
+}
 // Controlador
 // Controlador
 // Controlador
