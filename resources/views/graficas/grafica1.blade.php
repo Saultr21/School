@@ -22,8 +22,6 @@
         data.addRows(processedData);
 
         var options = {
-            title: '{{ $title }}',
-            subtitle: '{{ $subtitle }}',
             curveType: 'function',
             legend: {
                 position: 'bottom'

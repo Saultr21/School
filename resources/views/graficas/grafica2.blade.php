@@ -12,11 +12,31 @@
     function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Fecha');
-        data.addColumn('number', 'Consumo');
+        data.addColumn('number', 'Consumo Agua');
+        data.addColumn('number', 'Consumo Luz');
 
-        @foreach($measurements as $measurement)
-            data.addRow(['{{ $measurement->fecha->toDateString() }}', {{ $measurement->consumo }}]);
+        var processedDataAgua = [];
+        var processedDataLuz = [];
+
+        @foreach($measurementsAgua as $measurement)
+            processedDataAgua.push(['{{ $measurement->fecha }}', {{ $measurement->consumo }}]);
         @endforeach
+
+        @foreach($measurementsLuz as $measurement)
+            processedDataLuz.push(['{{ $measurement->fecha }}', {{ $measurement->consumo }}]);
+        @endforeach
+
+        var mergedData = [];
+
+        // Fusionar los datos de agua y luz
+        for (var i = 0; i < processedDataAgua.length; i++) {
+            var date = processedDataAgua[i][0];
+            var consumoAgua = processedDataAgua[i][1];
+            var consumoLuz = processedDataLuz[i][1];
+            mergedData.push([date, consumoAgua, consumoLuz]);
+        }
+
+        data.addRows(mergedData); // Agregar los datos fusionados al DataTable
 
         var options = {
             title: '{{ $title }}',
@@ -33,6 +53,7 @@
         chart.draw(data, options);
     }
 </script>
+
 @endsection
 
 @section('content')
