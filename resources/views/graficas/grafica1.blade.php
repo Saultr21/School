@@ -34,8 +34,6 @@
 @endsection
 
 @section('content')
-<p>{{$measurements->first()->consumo}}</p>
-<p>{{$measurements->first()->id_sensor}}</p>
 <div id="chart_div" style="width: 100%; height: 400px;"></div>
 @endsection
 
