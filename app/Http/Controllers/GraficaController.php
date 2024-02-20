@@ -31,6 +31,24 @@ public function grafica2()
     // Obtener el último día del mes anterior
     $endOfMonth = Carbon::now()->subMonth()->endOfMonth()->toDateString();
 
+    // Obtener el útimo dia del mes anterior al anterior
+    $endOfMonth2 = Carbon::now()->subMonths(2)->endOfMonth()->toDateString();
+
+
+    $measurementAguaAnterior = Measurement::select(DB::raw('DATE(fecha) as fecha, MAX(consumo) as consumo'))
+                                        ->where('id_sensor', 2)
+                                        ->whereDate('fecha', '=', $endOfMonth2)
+                                        ->groupBy(DB::raw('DATE(fecha)'))
+                                        ->latest('fecha')
+                                        ->first();
+
+    $measurementLuzAnterior = Measurement::select(DB::raw('DATE(fecha) as fecha, MAX(consumo) as consumo'))
+                                        ->where('id_sensor', 1)
+                                        ->whereDate('fecha', '=', $endOfMonth2)
+                                        ->groupBy(DB::raw('DATE(fecha)'))
+                                        ->latest('fecha')
+                                        ->first();
+
     $measurementsAgua = Measurement::select(DB::raw('DATE(fecha) as fecha, MAX(consumo) as consumo'))
                                 ->where('id_sensor', 2) // Id del sensor de agua
                                 ->whereDate('fecha', '>=', $startOfMonth)
@@ -48,7 +66,7 @@ public function grafica2()
     $title = "Consumo del mes anterior ($startOfMonth al $endOfMonth)";
     $subtitle = "Subtítulo de la Gráfica 2";
 
-    return view('graficas.grafica2', compact('title', 'subtitle', 'measurementsAgua', 'measurementsLuz'));
+    return view('graficas.grafica2', compact('title', 'subtitle', 'measurementsAgua', 'measurementsLuz', 'measurementAguaAnterior', 'measurementLuzAnterior', 'endOfMonth2'));
 }
 
 

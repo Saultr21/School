@@ -6,7 +6,7 @@
     Página principal - Panel de control
   </div>
   <div class="card-body">
-    Bienvenido al panel de control. 
+    Bienvenido al panel de control.
   </div>
 </div>
 @endsection

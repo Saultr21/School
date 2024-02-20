@@ -17,6 +17,8 @@
 
         var processedDataAgua = [];
         var processedDataLuz = [];
+        var processedDataAgua = {{ $measurementAguaAnterior->consumo }};
+        var processedDataLuz = {{ $measurementLuzAnterior->consumo }};
 
         @foreach($measurementsAgua as $measurement)
             processedDataAgua.push(['{{ $measurement->fecha }}', {{ $measurement->consumo }}]);
@@ -57,5 +59,8 @@
 @endsection
 
 @section('content')
+<div>{{$endOfMonth2}}</div>
+<div>{{ $measurementAguaAnterior->consumo }}</div>
+<div>{{$measurementLuzAnterior->consumo}}</div>
 <div id="chart_div" style="width: 100%; height: 400px;"></div>
 @endsection

@@ -12,7 +12,7 @@
     function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('datetime', 'Fecha');
-        data.addColumn('number', 'Consumo');
+        data.addColumn('number', 'Consumo'); 
 
         // Procesar los datos
         var processedData = [];
