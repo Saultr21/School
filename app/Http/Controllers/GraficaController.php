@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class GraficaController extends Controller
 {
+    /*
     public function grafica1()
 {
     $date = Carbon::now()->toDateString();
@@ -20,6 +21,36 @@ class GraficaController extends Controller
 
     return view('graficas.grafica1', compact('title', 'subtitle', 'measurements'));
 }
+*/
+public function grafica1()
+{
+    $date = Carbon::now()->toDateString();
+
+    $measurements_id_1 = Measurement::selectRaw('DATE_FORMAT(fecha, "%H:00") as hour, 
+        SUM(consumo) - COALESCE(LAG(SUM(consumo)) OVER (ORDER BY fecha), 0) as consumo_diferencia')
+        ->where('id_sensor', 1)
+        ->whereDate('fecha', $date)
+        ->groupBy('hour')
+        ->orderBy('hour')
+        ->get();
+
+    $measurements_id_2 = Measurement::selectRaw('DATE_FORMAT(fecha, "%H:00") as hour, 
+        SUM(consumo) - COALESCE(LAG(SUM(consumo)) OVER (ORDER BY fecha), 0) as consumo_diferencia')
+        ->where('id_sensor', 2)
+        ->whereDate('fecha', $date)
+        ->groupBy('hour')
+        ->orderBy('hour')
+        ->get();
+
+    $title = "Variación de consumo del día: $date";
+    $subtitle = "Subtítulo de la Gráfica 1";
+
+    return view('graficas.grafica1', compact('title', 'subtitle', 'measurements_id_1', 'measurements_id_2'));
+}
+
+
+
+
 // Controlador
 // Controlador
 // Controlador
