@@ -47,14 +47,16 @@
         </div>
     </nav>
     <header>
-        <div class="container d-flex justify-content-center">
+        <div class="container d-flex justify-content-center mt-5">
             <h1>@yield('title')</h1>
+        </div>
+        <div class="container d-flex justify-content-center mt-2">
             <h2>@yield('subtitle')</h2>
         </div>
     </header>
 
     <main>
-        <div class="chart-container">
+        <div class="chart-container mt-5">
             @yield('content')
         </div>
     </main>

@@ -8,54 +8,70 @@ use Illuminate\Support\Facades\DB;
 
 class GraficaController extends Controller
 {
-    /*
-    public function grafica1()
-{
-    $date = Carbon::now()->toDateString();
-    $measurements = Measurement::select('id_sensor', 'fecha', 'consumo')
-        ->whereDate('fecha', $date)
-        ->get();
 
-    $title = "Consumo del día: $date";
-    $subtitle = "Subtítulo de la Gráfica 1";
+    private function convertirFecha($fecha) {
+        setlocale(LC_TIME, 'es_ES.UTF-8'); // Establecer la configuración regional a español
+        $fecha = Carbon::parse($fecha)->isoFormat('dddd DD [de] MMMM [de] YYYY');
+    
+        // Traducir el nombre del día y el mes al español
+        $fecha = str_replace(
+            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+            $fecha
+        );
+    
+        $fecha = str_replace(
+            ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+            $fecha
+        );
+    
+        return $fecha;
+    }
 
-    return view('graficas.grafica1', compact('title', 'subtitle', 'measurements'));
-}
-*/
 public function grafica1()
 {
-    $date = Carbon::now()->toDateString();
+    $dateSQL = Carbon::now()->toDateString();
+    $date = $this->convertirFecha(Carbon::now());
 
     $measurements_id_1 = Measurement::selectRaw('DATE_FORMAT(fecha, "%H:00") as hour, 
         SUM(consumo) - COALESCE(LAG(SUM(consumo)) OVER (ORDER BY fecha), 0) as consumo_diferencia')
         ->where('id_sensor', 1)
-        ->whereDate('fecha', $date)
+        ->whereDate('fecha', $dateSQL)
         ->groupBy('hour')
         ->orderBy('hour')
         ->get();
+
+    $title = "Variación de consumo de luz";
+    $subtitle = $date;
+
+    return view('graficas.grafica1', compact('title', 'subtitle', 'measurements_id_1'));
+}
+
+public function grafica2()
+{
+    $dateSQL = Carbon::now()->toDateString();
+    $date = $this->convertirFecha(Carbon::now());
 
     $measurements_id_2 = Measurement::selectRaw('DATE_FORMAT(fecha, "%H:00") as hour, 
         SUM(consumo) - COALESCE(LAG(SUM(consumo)) OVER (ORDER BY fecha), 0) as consumo_diferencia')
         ->where('id_sensor', 2)
-        ->whereDate('fecha', $date)
+        ->whereDate('fecha', $dateSQL)
         ->groupBy('hour')
         ->orderBy('hour')
         ->get();
 
-    $title = "Variación de consumo del día: $date";
-    $subtitle = "Subtítulo de la Gráfica 1";
+    $title = "Variación de consumo de agua";
+    $subtitle = $date;
 
-    return view('graficas.grafica1', compact('title', 'subtitle', 'measurements_id_1', 'measurements_id_2'));
+    return view('graficas.grafica2', compact('title', 'subtitle', 'measurements_id_2'));
 }
 
 
 
-
-// Controlador
-// Controlador
-// Controlador
-public function grafica2()
-{
+    
+    public function grafica3()
+    {
     // Obtener el primer día del mes anterior
     $startOfMonth = Carbon::now()->subMonth()->startOfMonth()->toDateString();
 
@@ -97,19 +113,7 @@ public function grafica2()
     $title = "Consumo del mes anterior ($startOfMonth al $endOfMonth)";
     $subtitle = "Subtítulo de la Gráfica 2";
 
-    return view('graficas.grafica2', compact('title', 'subtitle', 'measurementsAgua', 'measurementsLuz', 'measurementAguaAnterior', 'measurementLuzAnterior', 'endOfMonth2'));
-}
-
-
-
-    
-    public function grafica3()
-    {
-        $title = "Gráfica 3";
-        $subtitle = "Subtítulo de la Gráfica 3";
-
-        
-        return view('graficas.grafica3', compact('title', 'subtitle'));
+    return view('graficas.grafica3', compact('title', 'subtitle', 'measurementsAgua', 'measurementsLuz', 'measurementAguaAnterior', 'measurementLuzAnterior', 'endOfMonth2'));
     }
 
     public function grafica4()

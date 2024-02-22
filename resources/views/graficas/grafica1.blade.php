@@ -1,9 +1,33 @@
 @extends('layouts.grafica')
 
 @section('title', $title)
-
+@section('subtitle', $subtitle)
 
 @section('scripts')
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        // Arreglo con las rutas de las vistas
+        var vistas = [
+            "{{ route('grafica1') }}",
+            "{{ route('grafica2') }}",
+            "{{ route('grafica3') }}",
+            "{{ route('grafica4') }}",
+        ];
+
+        var indiceActual = 0; // Índice de la vista actual
+
+        function alternarVistas() {
+            // Obtener la próxima vista del arreglo
+            var proximaVista = vistas[indiceActual+1];
+            // Redirigir a la próxima vista
+            window.location.href = proximaVista;
+        }
+
+        setInterval(alternarVistas, 5000); // 10000 ms = 10 segundos
+    });
+</script>
+
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
@@ -15,49 +39,38 @@
         data1.addColumn('string', 'Hora');
         data1.addColumn('number', 'Luz');
         var measurements_id_1 = {!! json_encode($measurements_id_1) !!};
-        for (var i = 0; i < measurements_id_1.length; i++) {
-            data1.addRow([measurements_id_1[i].hour, measurements_id_1[i].consumo_diferencia]);
+        
+        // Eliminar el primer elemento del array measurements_id_1
+        measurements_id_1.shift();
+        
+        for (var j = 0; j < measurements_id_1.length; j++) {
+            data1.addRow([measurements_id_1[j].hour, measurements_id_1[j].consumo_diferencia]);
         }
 
         // Configuración para el gráfico del sensor 1
         var options1 = {
-
             curveType: 'function',
-            colors: ['#3366cc']
+            colors: ['#3366CC'],
+            backgroundColor: 'transparent',
+            animation: {
+                startup: true, // Activar la animación al inicio
+                duration: 1000, // Duración de la animación en milisegundos (1 segundo en este caso)
+                easing: 'out' // Tipo de suavizado de la animación
+            },
+
         };
 
-        var chart1 = new google.visualization.AreaChart(document.getElementById('chart_div_agua'));
+        var chart1 = new google.visualization.ColumnChart(document.getElementById('chart_div_luz'));
         chart1.draw(data1, options1);
-
-        // Datos para el sensor 2
-        var data2 = new google.visualization.DataTable();
-        data2.addColumn('string', 'Hora');
-        data2.addColumn('number', 'Agua');
-        var measurements_id_2 = {!! json_encode($measurements_id_2) !!};
-        for (var j = 0; j < measurements_id_2.length; j++) {
-            data2.addRow([measurements_id_2[j].hour, measurements_id_2[j].consumo_diferencia]);
-        }
-
-        // Configuración para el gráfico del sensor 2
-        var options2 = {
-
-            curveType: 'function',
-            colors: ['#dc3912']
-
-        };
-
-        var chart2 = new google.visualization.AreaChart(document.getElementById('chart_div_luz'));
-        chart2.draw(data2, options2);
     }
-</script>
 
+
+    
+</script>
 @endsection
 
 @section('content')
-<div class="d-flex justify-content-center border">
-    <div id="chart_div_agua" style="width: 90%; height: 400px;"></div>
-</div>
-<div class="d-flex justify-content-center border">
+<div class="d-flex justify-content-center">
     <div id="chart_div_luz" style="width: 90%; height: 400px;"></div>
 </div>
 @endsection
