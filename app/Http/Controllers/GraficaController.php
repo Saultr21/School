@@ -72,59 +72,68 @@ public function grafica2()
     
     public function grafica3()
     {
-    // Obtener el primer día del mes anterior
-    $startOfMonth = Carbon::now()->subMonth()->startOfMonth()->toDateString();
+    // Obtener el día anterior
+    $yesterday = Carbon::yesterday()->toDateString();
 
-    // Obtener el último día del mes anterior
-    $endOfMonth = Carbon::now()->subMonth()->endOfMonth()->toDateString();
+    // Obtener el día hace 20 días
+    $twentyDaysAgo = Carbon::now()->subDays(20)->toDateString();
 
-    // Obtener el útimo dia del mes anterior al anterior
-    $endOfMonth2 = Carbon::now()->subMonths(2)->endOfMonth()->toDateString();
-
-
-    $measurementAguaAnterior = Measurement::select(DB::raw('DATE(fecha) as fecha, MAX(consumo) as consumo'))
-                                        ->where('id_sensor', 2)
-                                        ->whereDate('fecha', '=', $endOfMonth2)
-                                        ->groupBy(DB::raw('DATE(fecha)'))
-                                        ->latest('fecha')
-                                        ->first();
+    // Obtener el día anterior al día hace 20 días
+    $dayBeforeTwentyDaysAgo = Carbon::now()->subDays(21)->toDateString();
 
     $measurementLuzAnterior = Measurement::select(DB::raw('DATE(fecha) as fecha, MAX(consumo) as consumo'))
                                         ->where('id_sensor', 1)
-                                        ->whereDate('fecha', '=', $endOfMonth2)
+                                        ->whereDate('fecha', '=', $dayBeforeTwentyDaysAgo)
                                         ->groupBy(DB::raw('DATE(fecha)'))
                                         ->latest('fecha')
                                         ->first();
 
-    $measurementsAgua = Measurement::select(DB::raw('DATE(fecha) as fecha, MAX(consumo) as consumo'))
-                                ->where('id_sensor', 2) // Id del sensor de agua
-                                ->whereDate('fecha', '>=', $startOfMonth)
-                                ->whereDate('fecha', '<=', $endOfMonth)
-                                ->groupBy(DB::raw('DATE(fecha)'))
-                                ->get();
 
     $measurementsLuz = Measurement::select(DB::raw('DATE(fecha) as fecha, MAX(consumo) as consumo'))
                                 ->where('id_sensor', 1) // Id del sensor de luz
-                                ->whereDate('fecha', '>=', $startOfMonth)
-                                ->whereDate('fecha', '<=', $endOfMonth)
+                                ->whereDate('fecha', '>=', $twentyDaysAgo)
+                                ->whereDate('fecha', '<=', $yesterday)
                                 ->groupBy(DB::raw('DATE(fecha)'))
                                 ->get();
 
-    $title = "Consumo del mes anterior ($startOfMonth al $endOfMonth)";
-    $subtitle = "Subtítulo de la Gráfica 2";
+    $title = "Variación de consumo de luz";
+    $subtitle = "últimos 20 días ($twentyDaysAgo al $yesterday)";
 
-    return view('graficas.grafica3', compact('title', 'subtitle', 'measurementsAgua', 'measurementsLuz', 'measurementAguaAnterior', 'measurementLuzAnterior', 'endOfMonth2'));
+    return view('graficas.grafica3', compact('title', 'subtitle', 'measurementsLuz', 'measurementLuzAnterior'));
     }
 
     public function grafica4()
     {
-        $title = "Gráfica 4";
-        $subtitle = "Subtítulo de la Gráfica 4";
+        // Obtener el día anterior
+        $yesterday = Carbon::yesterday()->toDateString();
 
-        
-        return view('graficas.grafica4', compact('title', 'subtitle'));
-    }
+        // Obtener el día hace 20 días
+        $twentyDaysAgo = Carbon::now()->subDays(20)->toDateString();
 
+        // Obtener el día anterior al día hace 20 días
+        $dayBeforeTwentyDaysAgo = Carbon::now()->subDays(21)->toDateString();
+
+    
+    
+        $measurementAguaAnterior = Measurement::select(DB::raw('DATE(fecha) as fecha, MAX(consumo) as consumo'))
+                                            ->where('id_sensor', 2)
+                                            ->whereDate('fecha', '=', $dayBeforeTwentyDaysAgo)
+                                            ->groupBy(DB::raw('DATE(fecha)'))
+                                            ->latest('fecha')
+                                            ->first();
+    
+        $measurementsAgua = Measurement::select(DB::raw('DATE(fecha) as fecha, MAX(consumo) as consumo'))
+                                    ->where('id_sensor', 2) // Id del sensor de agua
+                                    ->whereDate('fecha', '>=', $twentyDaysAgo)
+                                    ->whereDate('fecha', '<=', $yesterday)
+                                    ->groupBy(DB::raw('DATE(fecha)'))
+                                    ->get();
+    
+        $title = "Variación del consumo de agua";
+        $subtitle = "últimos 20 días ($twentyDaysAgo al $yesterday)";
+    
+        return view('graficas.grafica4', compact('title', 'subtitle', 'measurementsAgua', 'measurementAguaAnterior'));
+        }
  
     
 }

@@ -20,7 +20,7 @@
 
         function alternarVistas() {
             // Obtener la próxima vista del arreglo
-            var proximaVista = vistas[indiceActual-1];//Cambiar a +1 cuando la vista 3 esté lista
+            var proximaVista = vistas[indiceActual+1];
             // Redirigir a la próxima vista
             window.location.href = proximaVista;
         }

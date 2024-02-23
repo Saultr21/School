@@ -37,44 +37,42 @@
     function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Fecha');
-        data.addColumn('number', 'Consumo Agua');
         data.addColumn('number', 'Consumo Luz');
 
-        var processedDataAgua = [];
         var processedDataLuz = [];
-        var processedDataAgua = {{ $measurementAguaAnterior->consumo }};
-        var processedDataLuz = {{ $measurementLuzAnterior->consumo }};
-
-        @foreach($measurementsAgua as $measurement)
-            processedDataAgua.push(['{{ $measurement->fecha }}', {{ $measurement->consumo }}]);
-        @endforeach
 
         @foreach($measurementsLuz as $measurement)
-            processedDataLuz.push(['{{ $measurement->fecha }}', {{ $measurement->consumo }}]);
+            var formattedDate = new Date('{{ $measurement->fecha }}');
+            var dayMonthString = (formattedDate.getMonth() + 1) + '/' + formattedDate.getDate(); // Formato MM/DD
+
+            processedDataLuz.push([dayMonthString, {{ $measurement->consumo }}]);
         @endforeach
 
         var mergedData = [];
+        var valor = {{$measurementLuzAnterior->consumo}};
+        let ultimo_consumo = 0;
 
         // Fusionar los datos de agua y luz
-        for (var i = 0; i < processedDataAgua.length; i++) {
-            var date = processedDataAgua[i][0];
-            var consumoAgua = processedDataAgua[i][1];
-            var consumoLuz = processedDataLuz[i][1];
-            mergedData.push([date, consumoAgua, consumoLuz]);
+        for (var i = 0; i < processedDataLuz.length; i++) {
+            var date = processedDataLuz[i][0];
+            var consumoLuz = processedDataLuz[i][1]-ultimo_consumo;
+            ultimo_consumo = consumoLuz;
+            mergedData.push([date, consumoLuz]);
         }
 
         data.addRows(mergedData); // Agregar los datos fusionados al DataTable
 
         var options = {
-            title: '{{ $title }}',
-            subtitle: '{{ $subtitle }}',
-            hAxis: {
-                title: 'Fecha'
-            },
-            vAxis: {
-                title: 'Consumo'
-            }
-        };
+
+        curveType: 'function',
+        colors: ['#dc3912'],
+        backgroundColor: 'transparent',
+        animation: {
+        startup: true, // Activar la animación al inicio
+        duration: 1000, // Duración de la animación en milisegundos (1 segundo en este caso)
+        easing: 'out' // Tipo de suavizado de la animación
+        }
+    }
 
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
         chart.draw(data, options);
@@ -84,8 +82,5 @@
 @endsection
 
 @section('content')
-<div>{{$endOfMonth2}}</div>
-<div>{{ $measurementAguaAnterior->consumo }}</div>
-<div>{{$measurementLuzAnterior->consumo}}</div>
 <div id="chart_div" style="width: 100%; height: 400px;"></div>
 @endsection
